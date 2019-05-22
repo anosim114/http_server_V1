@@ -34,6 +34,8 @@ struct Cookie {
 };
 
 struct Request_HTTP_Header {
+    char url[1024];
+    char method[1024];
     char raw_header[2056];
     char req_ip[16];
     char accept[32];
