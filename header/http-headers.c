@@ -9,13 +9,16 @@ char parse_http_req_header(const char *raw_header, struct Request_HTTP_Header *h
     char buffer1[32];
     char buffer2[256];
 
+    strncpy(header->url, " ", 1024);
+    strncpy(header->method, " ", 1024);
+
     int begin = 0;
 
     int m = 0;
     for (int i = 0; ; i++) {
         char t[2];
-        char buffer[1024] = "";
         strncpy(t, raw_header + i, 2);
+
 
         if (strncmp("\r\n", t, 2) == 0) {
             begin = i + 2;
@@ -28,10 +31,8 @@ char parse_http_req_header(const char *raw_header, struct Request_HTTP_Header *h
         }
         
         if (m == 0) {
-            strncat(buffer, raw_header + i, 1);
+            strncat(header->method, raw_header + i, 1);
             if (raw_header[i] == ' ') {
-                strcpy(buffer, header->method);
-                strncpy(buffer, " ", 1024);
                 m = 1;
             }
         } else if (m == 1) {

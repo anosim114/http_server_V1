@@ -12,7 +12,7 @@
 #define PORT 8080
 
 /* some configurations */
-const char *byeMsg = "HTTP/1.1 200 OK\r\nContent-Length: 5\r\n\r\n> bye";
+const char *byeMsg =    "HTTP/1.1 200 OK\r\nServer: C-Norri\r\nContent-Length: 5\r\n\r\n> bye";
 
 int main(int argc, char *argv[]) {
 
@@ -46,19 +46,33 @@ int main(int argc, char *argv[]) {
     }
 
 
-    /* Main Playground */
+    // read config
+    FILE *config_file;
+    config_file = fopen("./server.config", "r");
+
+    char c;
+    char config_str[1024];
+
+    while ((c = fgetc(config_file)) != EOF) {
+        strcat(config_str, &c);
+    }
+
+    fclose(config_file);
+
+    printf("config:\n%s\n", config_str);
+
+    /* main playground */
     while (1) {
         char buffer[1024] = "";
         char content[10240];
 
-        printf("Accepting new connections\n");
         new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen);
+        
+        // cheking if it worked is waste of time... *shakes head*
         /* if ((new_socket = accept(server_fd, (struct sockaddr *)&address, (socklen_t*)&addrlen)) < 0) {
             fprintf(stderr, "accepting failed\n");
             return 1;
         } */
-
-        printf("New connection accepted\n");
 
         while (1) {
             char exit = 0;
@@ -89,8 +103,9 @@ int main(int argc, char *argv[]) {
         struct Request_HTTP_Header req;
         parse_http_req_header(content, &req);
 
-        printf("url: %s\n", req.url);
+        printf("%s : %s \r\n", req.method, req.url);
 
+        // send message
         send(new_socket, byeMsg, strlen(byeMsg), 0);
 
         close(new_socket);
