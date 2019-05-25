@@ -12,7 +12,7 @@
 #define PORT 8080
 
 /* some configurations */
-const char *byeMsg =    "HTTP/1.1 200 OK\r\nServer: C-Norri\r\nContent-Length: 5\r\n\r\n> bye";
+const char *byeMsg = "HTTP/1.1 200 OK\r\nServer: C-Norri\r\nContent-Length: 5\r\n\r\n> bye";
 
 int main(int argc, char *argv[]) {
 
